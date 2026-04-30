@@ -5,36 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선교지를 찾아라!</title>
     
-    <!-- 귀여운 폰트 추가 (Single Day) -->
-    <link href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap" rel="stylesheet">
+    <!-- 깔끔하고 고급스러운 프리텐다드 폰트 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/contetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        :root { --primary-color: #4facfe; --secondary-color: #00f2fe; --bg-color: #f0f9ff; }
-        body { font-family: 'Pretendard', sans-serif; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 2rem; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 500px; z-index: 10; }
-        h1 { color: #2c3e50; font-size: 1.8rem; margin-bottom: 1rem; }
-        .btn-explore { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
-        #result-card { margin-top: 2rem; padding: 1.5rem; border-radius: 20px; background: #f8f9fa; border: 2px dashed #4facfe; display: none; animation: fadeInUp 0.5s ease-out; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .flag { font-size: 3rem; }
-        .country-name { font-size: 1.5rem; font-weight: 800; color: #333; margin: 10px 0; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .info-item { background: white; padding: 10px; border-radius: 10px; font-size: 0.9rem; text-align: left; }
-        .info-label { font-weight: bold; color: #4facfe; font-size: 0.8rem; display: block; }
+        :root { 
+            --primary-color: #2563eb; /* 신뢰감 있는 블루 */
+            --secondary-color: #3b82f6; 
+            --bg-color: #f8fafc; 
+        }
+
+        body { 
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+            background: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .container { 
+            background: white; 
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            text-align: center; 
+            width: 90%; 
+            max-width: 450px; 
+            z-index: 10; 
+        }
+
+        h1 { 
+            color: #0f172a; 
+            font-size: 1.8rem; 
+            font-weight: 800;
+            margin-bottom: 0.5rem; 
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-mission { 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            padding: 16px 32px; 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-mission:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        #result-card { 
+            margin-top: 2rem; 
+            padding: 1.5rem; 
+            border-radius: 16px; 
+            background: #f1f5f9; 
+            border: 1px solid #e2e8f0; 
+            display: none; 
+            animation: fadeIn 0.4s ease-out; 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .flag { font-size: 3.5rem; margin-bottom: 10px; }
+        .country-name { font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-bottom: 15px; }
         
-        /* 지민 제작자 스타일 */
-        .footer { margin-top: 25px; text-align: center; font-size: 0.9rem; color: #7f8c8d; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .info-item { background: white; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: left; }
+        .info-label { font-weight: 600; color: #2563eb; font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .info-value { font-weight: 700; font-size: 0.95rem; color: #334155; }
+        
+        #description { color: #475569; font-size: 0.9rem; line-height: 1.6; }
+
+        /* 제작자 지민 섹션 - 깔끔한 스타일 */
+        .footer { margin-top: 40px; text-align: center; }
+        .maker-tag {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
         .maker-name { 
-            font-family: 'Single Day', cursive; 
-            background: #ffeaa7; 
-            padding: 6px 20px; 
-            border-radius: 25px; 
-            color: #d63031; 
-            font-size: 1.1rem;
-            display: inline-block; 
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            padding: 4px 12px;
+            border-top: 2px solid #2563eb; /* 깔끔한 포인트 선 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>선교지를 찾아라!</h1>
+        <p class="subtitle">버튼을 눌러 우리가 기도할 선교지를 확인하세요.</p>
+        
+        <button class="btn-mission" onclick="findMission()">
+            <i class="fas fa-cross"></i> 선교지 찾기
+        </button>
+
+        <div id="result-card">
+            <div id="flag-icon" class="flag">📍</div>
+            <div id="country" class="country-name">국가 정보</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">주요 종교</span>
+                    <span id="religion" class="info-value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">기독교 비율</span>
+                    <span id="percent" class="info-value">-</span>
+                </div>
+            </div>
+            <p id="description"></p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="maker-tag">Project By</span><br>
+        <div class="maker-name">제작자: 지민</div>
+    </div>
+
+    <script>
+        const missionFields = [
+            { name: "인도 (India)", flag: "🇮🇳", religion: "힌두교 (79.5%)", percent: "2.1%", desc: "조슈아 프로젝트 기준 미전도 종족이 가장 많은 나라입니다. 수많은 종족이 복음을 기다리고 있습니다." },
+            { name: "파키스탄 (Pakistan)", flag: "🇵🇰", religion: "이슬람교 (96.5%)", percent: "0.6%", desc: "무슬림 인구가 절대다수이며, 기독교인에 대한 기도가 절실히 필요한 선교지입니다." },
+            { name: "이란 (Iran)", flag: "🇮🇷", religion: "이슬람교 (99.4%)", percent: "0.4%", desc: "복음의 문이 굳게 닫힌 것 같지만, 지하 교회 성도들이 가장 빠르게 늘어나는 기적의 땅입니다." },
+            { name: "네팔 (Nepal)", flag: "🇳🇵", religion: "힌두교 (80.6%)", percent: "2.9%", desc: "힌두교 문화권이지만 최근 젊은 층을 중심으로 복음이 활발히 전해지고 있는 선교지입니다." },
+            { name: "알제리 (Algeria)", flag: "🇩🇿", religion: "이슬람교 (99.0%)", percent: "0.3%", desc: "북아프리카 사하라 사막 근처의 미전도 종족들에게 사랑의 손길이 필요합니다." }
+        ];
+
+        function findMission() {
+            const field = missionFields[Math.floor(Math.random() * missionFields.length)];
+            
+            const card = document.getElementById('result-card');
+            card.style.display = 'block';
+            
+            document.getElementById('flag-icon').innerText = field.flag;
+            document.getElementById('country').innerText = field.name;
+            document.getElementById('religion').innerText = field.religion;
+            document.getElementById('percent').innerText = field.percent;
+            document.getElementById('description').innerText = field.desc;
+
+            // 축하 효과 (푸른색 계열로 깔끔하게)
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#2563eb', '#3b82f6', '#94a3b8']
+            });
+        }
+    </script>
+</body>
+</html>            display: inline-block; 
             margin-top: 8px;
             box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
         }
