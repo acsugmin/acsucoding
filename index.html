@@ -1,210 +1,82 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>선교지를 찾아라!</title>
+    <title>지민이의 미션 나침반</title>
     
-    <!-- 폰트: 가독성 좋은 프리텐다드 -->
+    <!-- 귀여운 폰트 추가 (Single Day) -->
+    <link href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    
-    <!-- 아이콘: 폰트 어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- 애니메이션 효과 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        :root {
-            --primary-color: #4facfe;
-            --secondary-color: #00f2fe;
-            --bg-color: #f0f9ff;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-            z-index: 10;
-            transition: transform 0.3s ease;
-        }
-
-        h1 {
-            color: #2c3e50;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        p.intro {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* 탐험 버튼 스타일 */
-        .btn-explore {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-explore:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.6);
-        }
-
-        /* 결과 창 스타일 */
-        #result-card {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border-radius: 20px;
-            background: #f8f9fa;
-            border: 2px dashed #4facfe;
-            display: none; /* 처음엔 안보이게 */
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .flag { font-size: 3rem; margin-bottom: 0.5rem; }
-        .country-name { font-size: 1.5rem; font-weight: 800; color: #333; margin-bottom: 1rem; }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            text-align: left;
-        }
-        .info-item {
-            background: white;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-        }
+        :root { --primary-color: #4facfe; --secondary-color: #00f2fe; --bg-color: #f0f9ff; }
+        body { font-family: 'Pretendard', sans-serif; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 500px; z-index: 10; }
+        h1 { color: #2c3e50; font-size: 1.8rem; margin-bottom: 1rem; }
+        .btn-explore { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
+        #result-card { margin-top: 2rem; padding: 1.5rem; border-radius: 20px; background: #f8f9fa; border: 2px dashed #4facfe; display: none; animation: fadeInUp 0.5s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .flag { font-size: 3rem; }
+        .country-name { font-size: 1.5rem; font-weight: 800; color: #333; margin: 10px 0; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .info-item { background: white; padding: 10px; border-radius: 10px; font-size: 0.9rem; text-align: left; }
         .info-label { font-weight: bold; color: #4facfe; font-size: 0.8rem; display: block; }
-
-        /* 배경 장식 */
-        .deco-circle {
-            position: absolute;
-            background: rgba(79, 172, 254, 0.1);
-            border-radius: 50%;
-            z-index: 1;
+        
+        /* 지민 제작자 스타일 */
+        .footer { margin-top: 25px; text-align: center; font-size: 0.9rem; color: #7f8c8d; }
+        .maker-name { 
+            font-family: 'Single Day', cursive; 
+            background: #ffeaa7; 
+            padding: 6px 20px; 
+            border-radius: 25px; 
+            color: #d63031; 
+            font-size: 1.1rem;
+            display: inline-block; 
+            margin-top: 8px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
 
-    <!-- 배경 장식 (동글동글 구름 같은 효과) -->
-    <div class="deco-circle" style="width: 300px; height: 300px; top: -100px; right: -100px;"></div>
-    <div class="deco-circle" style="width: 200px; height: 200px; bottom: -50px; left: -50px;"></div>
-
     <div class="container">
-        <h1><i class="fas fa-compass"></i> 선교지를 찾아라!</h1>
-        <p class="intro">버튼을 눌러 오늘 우리가 마음속에 품을<br><b>복음이 필요한 선교지</b>를 찾아보세요!</p>
+        <h1><i class="fas fa-compass"></i> 미션 나침반</h1>
+        <p>버튼을 누르면 우리가 품어야 할 탐험지가 나타나요!</p>
         
         <button class="btn-explore" onclick="recommendMission()">
-            <i class="fas fa-map-marked-alt"></i> 선교지 찾기!
+            <i class="fas fa-map-marked-alt"></i> 탐험 시작하기!
         </button>
 
         <div id="result-card">
             <div id="flag-icon" class="flag">📍</div>
             <div id="country" class="country-name">나라 이름</div>
             <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">주요 종교</span>
-                    <span id="religion">정보 없음</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">기독교 비율</span>
-                    <span id="percent">0%</span>
-                </div>
+                <div class="info-item"><span class="info-label">주요 종교</span><span id="religion">-</span></div>
+                <div class="info-item"><span class="info-label">기독교 비율</span><span id="percent">-</span></div>
             </div>
-            <p id="description" style="margin-top: 1rem; font-size: 0.95rem; line-height: 1.5; color: #555;"></p>
+            <p id="description" style="margin-top: 1rem; color: #555; font-size: 0.95rem;"></p>
         </div>
     </div>
 
+    <div class="footer">
+        지구촌을 품는 따뜻한 마음<br>
+        <div class="maker-name">🌟 제작자: 지민 🌟</div>
+    </div>
+
     <script>
-        // // 여기서 추천해줄 나라 정보를 더 추가하거나 수정할 수 있어!
         const missionFields = [
-            {
-                name: "인도",
-                flag: "🇮🇳",
-                religion: "힌두교 (약 80%)",
-                percent: "약 2.3%",
-                desc: "수많은 인구와 다양한 언어가 있는 나라예요. 복음을 들어보지 못한 마을이 아주 많답니다."
-            },
-            {
-                name: "튀르키예",
-                flag: "🇹🇷",
-                religion: "이슬람교 (약 99%)",
-                percent: "약 0.2% 미만",
-                desc: "성경 속 역사가 가득한 곳이지만, 지금은 기독교인을 찾기 아주 어려운 땅이에요."
-            },
-            {
-                name: "일본",
-                flag: "🇯🇵",
-                religion: "신토/불교 (약 90%)",
-                percent: "약 1% 미만",
-                desc: "가깝고도 먼 나라예요. 많은 사람이 하나님 대신 수만 개의 다른 신을 믿고 있어요."
-            },
-            {
-                name: "모로코",
-                flag: "🇲🇦",
-                religion: "이슬람교 (약 99%)",
-                percent: "약 0.1% 미만",
-                desc: "북아프리카의 아름다운 나라지만, 예수님을 믿는다는 이유로 어려움을 겪기도 해요."
-            },
-            {
-                name: "태국",
-                flag: "🇹🇭",
-                religion: "불교 (약 95%)",
-                percent: "약 1.2%",
-                desc: "미소의 나라라고 불려요. 곳곳에 화려한 불교 사원이 아주 많답니다."
-            },
-            {
-                name: "몽골",
-                flag: "🇲🇳",
-                religion: "불교 (약 53%)",
-                percent: "약 2.1%",
-                desc: "넓은 초원이 펼쳐진 곳이에요. 추운 겨울을 지내는 친구들에게 따뜻한 사랑이 필요해요."
-            }
+            { name: "인도 (India)", flag: "🇮🇳", religion: "힌두교 (79.5%)", percent: "2.1%", desc: "세계에서 미전도 종족이 가장 많은 나라예요. 약 2,000개가 넘는 종족이 복음을 기다려요." },
+            { name: "파키스탄 (Pakistan)", flag: "🇵🇰", religion: "이슬람교 (96.5%)", percent: "0.6%", desc: "인구의 대부분이 무슬림이며, 기독교인은 아주 적어요. 기도가 많이 필요한 땅입니다." },
+            { name: "이란 (Iran)", flag: "🇮🇷", religion: "이슬람교 (99.4%)", percent: "0.4%", desc: "놀랍게도 마음속으로 예수님을 믿는 사람들이 세계에서 가장 빠르게 늘어나는 나라 중 하나예요!" },
+            { name: "네팔 (Nepal)", flag: "🇳🇵", religion: "힌두교 (80.6%)", percent: "2.9%", desc: "히말라야 산맥이 있는 아름다운 곳이에요. 최근 기독교인이 빠르게 늘고 있답니다." },
+            { name: "알제리 (Algeria)", flag: "🇩🇿", religion: "이슬람교 (99.0%)", percent: "0.3%", desc: "북아프리카의 넓은 나라예요. 사막 근처의 종족들이 복음을 기다리고 있어요." }
         ];
 
         function recommendMission() {
-            // 1. 랜덤으로 나라 고르기
-            const randomIdx = Math.floor(Math.random() * missionFields.length);
-            const field = missionFields[randomIdx];
-
-            // 2. 화면에 정보 보여주기
+            const field = missionFields[Math.floor(Math.random() * missionFields.length)];
             document.getElementById('result-card').style.display = 'block';
             document.getElementById('flag-icon').innerText = field.flag;
             document.getElementById('country').innerText = field.name;
@@ -212,18 +84,7 @@
             document.getElementById('percent').innerText = field.percent;
             document.getElementById('description').innerText = field.desc;
 
-            // 3. 축하 팡파르! (폭죽 효과)
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#4facfe', '#00f2fe', '#ffd700']
-            });
-
-            // 4. 버튼 누를 때마다 살짝 움직이는 효과
-            const btn = document.querySelector('.btn-explore');
-            btn.style.transform = "scale(0.95)";
-            setTimeout(() => { btn.style.transform = "scale(1)"; }, 100);
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#4facfe', '#ffeaa7', '#d63031'] });
         }
     </script>
 </body>
