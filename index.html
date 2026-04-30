@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선교지를 찾아라!</title>
     
-    <!-- 깔끔하고 고급스러운 프리텐다드 폰트 -->
+    <!-- 깔끔한 프리텐다드 폰트 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/contetti.browser.min.js"></script>
+    
+    <!-- 폭죽 효과 라이브러리 (오류 수정됨) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
         :root { 
-            --primary-color: #2563eb; /* 신뢰감 있는 블루 */
-            --secondary-color: #3b82f6; 
+            --primary-color: #2563eb; 
             --bg-color: #f8fafc; 
         }
 
         body { 
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+            font-family: 'Pretendard', sans-serif; 
             background: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
@@ -97,15 +97,10 @@
         .info-label { font-weight: 600; color: #2563eb; font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
         .info-value { font-weight: 700; font-size: 0.95rem; color: #334155; }
         
-        #description { color: #475569; font-size: 0.9rem; line-height: 1.6; }
+        #description { color: #475569; font-size: 0.9rem; line-height: 1.6; text-align: left; }
 
-        /* 제작자 지민 섹션 - 깔끔한 스타일 */
         .footer { margin-top: 40px; text-align: center; }
-        .maker-tag {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
+        .maker-tag { font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
         .maker-name { 
             display: inline-block;
             margin-top: 6px;
@@ -113,7 +108,7 @@
             font-weight: 700;
             color: #1e293b;
             padding: 4px 12px;
-            border-top: 2px solid #2563eb; /* 깔끔한 포인트 선 */
+            border-top: 2px solid #2563eb;
         }
     </style>
 </head>
@@ -124,7 +119,7 @@
         <p class="subtitle">버튼을 눌러 우리가 기도할 선교지를 확인하세요.</p>
         
         <button class="btn-mission" onclick="findMission()">
-            <i class="fas fa-cross"></i> 선교지 찾기
+            <i class="fas fa-pray"></i> 선교지 찾기
         </button>
 
         <div id="result-card">
@@ -151,13 +146,40 @@
 
     <script>
         const missionFields = [
-            { name: "인도 (India)", flag: "🇮🇳", religion: "힌두교 (79.5%)", percent: "2.1%", desc: "조슈아 프로젝트 기준 미전도 종족이 가장 많은 나라입니다. 수많은 종족이 복음을 기다리고 있습니다." },
-            { name: "파키스탄 (Pakistan)", flag: "🇵🇰", religion: "이슬람교 (96.5%)", percent: "0.6%", desc: "무슬림 인구가 절대다수이며, 기독교인에 대한 기도가 절실히 필요한 선교지입니다." },
-            { name: "이란 (Iran)", flag: "🇮🇷", religion: "이슬람교 (99.4%)", percent: "0.4%", desc: "복음의 문이 굳게 닫힌 것 같지만, 지하 교회 성도들이 가장 빠르게 늘어나는 기적의 땅입니다." },
-            { name: "네팔 (Nepal)", flag: "🇳🇵", religion: "힌두교 (80.6%)", percent: "2.9%", desc: "힌두교 문화권이지만 최근 젊은 층을 중심으로 복음이 활발히 전해지고 있는 선교지입니다." },
-            { name: "알제리 (Algeria)", flag: "🇩🇿", religion: "이슬람교 (99.0%)", percent: "0.3%", desc: "북아프리카 사하라 사막 근처의 미전도 종족들에게 사랑의 손길이 필요합니다." }
-        ];
+            // 기존 10개국
+            { name: "인도 (India)", flag: "🇮🇳", religion: "힌두교 (79.5%)", percent: "2.1%", desc: "미전도 종족이 가장 많은 나라입니다. 수많은 종족이 여전히 복음을 기다리고 있습니다." },
+            { name: "파키스탄 (Pakistan)", flag: "🇵🇰", religion: "이슬람교 (96.5%)", percent: "0.6%", desc: "기독교인에 대한 박해가 있는 곳입니다. 성도들의 안전과 복음 전파를 위해 기도가 필요합니다." },
+            { name: "이란 (Iran)", flag: "🇮🇷", religion: "이슬람교 (99.4%)", percent: "0.4%", desc: "어려운 환경 속에서도 지하 교회를 통해 하나님을 만나는 사람들이 급격히 늘어나고 있습니다." },
+            { name: "네팔 (Nepal)", flag: "🇳🇵", religion: "힌두교 (80.6%)", percent: "2.9%", desc: "힌두교 국가였으나 최근 기독교인이 빠르게 증가하며 영적 부흥이 일어나고 있습니다." },
+            { name: "알제리 (Algeria)", flag: "🇩🇿", religion: "이슬람교 (99.0%)", percent: "0.3%", desc: "북아프리카의 강력한 이슬람 국가입니다. 베르베르 종족을 향한 복음의 문이 열리길 기도합니다." },
+            { name: "모로코 (Morocco)", flag: "🇲🇦", religion: "이슬람교 (99.6%)", percent: "0.1% 미만", desc: "복음을 전하는 것이 법으로 금지되어 있어 지혜로운 선교적 접근이 필요한 땅입니다." },
+            { name: "태국 (Thailand)", flag: "🇹🇭", religion: "불교 (94.6%)", percent: "1.2%", desc: "오랜 선교 역사에도 불구하고 불교 문화가 매우 강합니다. 영적인 자유함이 필요한 곳입니다." },
+            { name: "소말리아 (Somalia)", flag: "🇸🇴", religion: "이슬람교 (99.8%)", percent: "0.01% 미만", desc: "세계에서 기독교로 살아가기 가장 위험한 곳 중 하나입니다. 극심한 고통 속에 있는 이들을 위해 기도가 필요합니다." },
+            { name: "부탄 (Bhutan)", flag: "🇧🇹", religion: "불교 (74.7%)", percent: "2.1%", desc: "은둔의 왕국이라 불리는 불교 국가입니다. 기독교인들이 자유롭게 예배할 수 있기를 기도합니다." },
+            { name: "터키 (Turkey)", flag: "🇹🇷", religion: "이슬람교 (98.6%)", percent: "0.2%", desc: "성경의 역사적 장소가 많지만, 현재는 기독교인을 찾기 매우 어려운 영적 불모지입니다." },
 
+            // 신규 추가 20개국
+            { name: "아프가니스탄 (Afghanistan)", flag: "🇦🇫", religion: "이슬람교 (99.7%)", percent: "0.1% 미만", desc: "세계에서 복음화율이 가장 낮은 나라 중 하나로, 기독교인들에 대한 매우 강력한 보호와 기도가 필요합니다." },
+            { name: "예멘 (Yemen)", flag: "🇾🇪", religion: "이슬람교 (99.1%)", percent: "0.1% 미만", desc: "오랜 전쟁과 기근으로 고통받는 땅입니다. 평화와 함께 복음의 생명력이 전해지길 소망합니다." },
+            { name: "미얀마 (Myanmar)", flag: "🇲🇲", religion: "불교 (87.9%)", percent: "7.9%", desc: "부족별로 복음화율 차이가 큽니다. 다수 종족인 버마족에게 복음이 전해지길 기도가 필요합니다." },
+            { name: "일본 (Japan)", flag: "🇯🇵", religion: "신토/불교 (90% 이상)", percent: "0.8%", desc: "물질적으로 풍요롭지만 영적으로는 공허함을 느끼는 사람이 많습니다. 진정한 진리를 찾는 마음이 일어나길 기도합니다." },
+            { name: "북한 (North Korea)", flag: "🇰🇵", religion: "무교/주체사상", percent: "1.5% 미만", desc: "신앙의 자유가 없는 곳에서 믿음을 지키는 성도들을 보호해 주시고, 복음의 문이 열리길 간절히 소망합니다." },
+            { name: "방글라데시 (Bangladesh)", flag: "🇧🇩", religion: "이슬람교 (89.1%)", percent: "0.4%", desc: "매우 인구 밀도가 높은 나라입니다. 가난과 재해 속에 있는 이들에게 복음의 소망이 필요합니다." },
+            { name: "라오스 (Laos)", flag: "🇱🇦", religion: "불교 (66.0%)", percent: "2.6%", desc: "공산주의 국가로 기독교 활동에 제약이 많습니다. 고난 속에서도 믿음이 성장하길 기도합니다." },
+            { name: "캄보디아 (Cambodia)", flag: "🇰🇭", religion: "불교 (97.9%)", percent: "1.6%", desc: "과거의 아픈 상처를 가진 나라입니다. 예수님의 사랑으로 그들의 마음이 치유되길 소망합니다." },
+            { name: "사우디아라비아 (Saudi Arabia)", flag: "🇸🇦", religion: "이슬람교 (93% 이상)", percent: "1.2% (주로 외국인)", desc: "이슬람의 중심지입니다. 현지인들이 꿈과 환상을 통해서라도 예수님을 만나는 역사가 있길 기도합니다." },
+            { name: "리비아 (Libya)", flag: "🇱🇾", religion: "이슬람교 (97.0%)", percent: "0.5% 미만", desc: "정치적 혼란이 지속되는 북아프리카 국가입니다. 평화의 왕이신 예수님이 이 땅에 임하시길 기도합니다." },
+            { name: "말리 (Mali)", flag: "🇲🇱", religion: "이슬람교 (90.0%)", percent: "2.3%", desc: "서아프리카의 미전도 종족이 많은 나라입니다. 종족 간의 갈등이 멈추고 복음이 전해지길 소망합니다." },
+            { name: "모리타니 (Mauritania)", flag: "🇲🇷", religion: "이슬람교 (100%)", percent: "0.1% 미만", desc: "국민 전체가 무슬림인 나라입니다. 단 한 명의 현지 기독교인도 찾기 힘든 이 땅을 위해 기도가 필요합니다." },
+            { name: "니제르 (Niger)", flag: "🇳🇪", religion: "이슬람교 (98.0%)", percent: "0.5% 미만", desc: "사하라 사막 남쪽의 가난한 나라입니다. 육적인 굶주림과 영적인 갈급함이 모두 채워지길 소망합니다." },
+            { name: "오만 (Oman)", flag: "🇴🇲", religion: "이슬람교 (85.9%)", percent: "1.0% 미만", desc: "이슬람 국가 중 상대적으로 온건하지만, 현지인 선교는 여전히 어렵습니다. 마음의 문이 열리길 기도합니다." },
+            { name: "이라크 (Iraq)", flag: "🇮🇶", religion: "이슬람교 (98.9%)", percent: "0.5% 미만", desc: "전쟁의 상흔이 깊은 곳입니다. 흩어진 성도들이 다시 모이고 교회가 회복되는 역사가 있길 소망합니다." },
+            { name: "수단 (Sudan)", flag: "🇸🇩", religion: "이슬람교 (90% 이상)", percent: "3.0% 미만", desc: "기독교인에 대한 핍박이 심한 곳입니다. 끝까지 신앙을 지키는 이들에게 위로와 힘이 필요합니다." },
+            { name: "몽골 (Mongolia)", flag: "🇲🇳", religion: "불교 (53.0%)", percent: "2.1%", desc: "척박한 환경 속에서도 1990년대 이후 교회가 세워지기 시작했습니다. 영적 성숙이 일어나길 기도합니다." },
+            { name: "우즈베키스탄 (Uzbekistan)", flag: "🇺🇿", religion: "이슬람교 (88.0%)", percent: "1.0% 미만", desc: "중앙아시아의 중심지로, 종교 활동에 제약이 많습니다. 지혜롭게 복음이 전해지길 소망합니다." },
+            { name: "투르크메니스탄 (Turkmenistan)", flag: "🇹🇲", religion: "이슬람교 (93.0%)", percent: "0.1% 미만", desc: "매우 폐쇄적인 국가 중 하나입니다. 닫힌 문이 열리고 하나님의 사랑이 전해지길 기도합니다." },
+            { name: "베트남 (Vietnam)", flag: "🇻🇳", religion: "무교/불교 (80% 이상)", percent: "9.5%", desc: "기독교인이 늘고 있지만 여전히 소수 민족들을 향한 선교적 관심이 많이 필요한 곳입니다." }
+        ];
         function findMission() {
             const field = missionFields[Math.floor(Math.random() * missionFields.length)];
             
@@ -170,12 +192,11 @@
             document.getElementById('percent').innerText = field.percent;
             document.getElementById('description').innerText = field.desc;
 
-            // 축하 효과 (푸른색 계열로 깔끔하게)
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 120,
+                spread: 80,
                 origin: { y: 0.6 },
-                colors: ['#2563eb', '#3b82f6', '#94a3b8']
+                colors: ['#2563eb', '#60a5fa', '#ffffff']
             });
         }
     </script>
