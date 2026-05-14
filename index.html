@@ -3,178 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 선교지를 찾아라!</title>
-    
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>나와 닮은 성경 인물 찾기 - ACSU 1반</title>
+    <!-- 가독성 끝판왕! 프리텐다드 폰트 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <!-- 화려한 축하 폭죽 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        :root { 
-            --primary-color: #74b9ff; 
-            --bg-color: #fff9f0;      
+        :root {
+            /* // 여기서 게임의 메인 테마 색상을 바꿀 수 있어! */
+            --primary-color: #6c5ce7; /* 보라색 */
+            --secondary-color: #a29bfe;
+            --bg-color: #f7f9fc;
+            --text-color: #2d3436;
         }
 
-        body { 
-            font-family: 'Pretendard', sans-serif; 
-            background-color: var(--bg-color); 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0;
-            color: #2d3436;
-        }
-
-        .container { 
-            background: white; 
-            padding: 2.5rem; 
-            border-radius: 40px; 
-            box-shadow: 0 15px 0 rgba(116, 185, 255, 0.1); 
-            text-align: center; 
-            width: 85%; 
-            max-width: 400px; 
-            border: 4px solid #74b9ff;
-        }
-
-        h1 { color: #0984e3; font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
-        p.subtitle { color: #636e72; margin-bottom: 2rem; font-size: 1rem; }
-
-        .btn-mission { 
-            background: var(--primary-color); 
-            color: white; 
-            border: none; 
-            padding: 18px 30px; 
-            font-size: 1.2rem; 
-            font-weight: 800; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 12px; 
-            width: 100%;
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
             justify-content: center;
-            box-shadow: 0 6px 0 #0984e3;
-            transition: all 0.2s;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
 
-        .btn-mission:active { transform: translateY(4px); box-shadow: 0 2px 0 #0984e3; }
-
-        #result-card { 
-            margin-top: 2.5rem; 
-            padding: 1.5rem; 
-            border-radius: 30px; 
-            background: #f0f7ff; 
-            border: 3px dashed #74b9ff; 
-            display: none; 
+        .game-container {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 40px 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .flag-box { font-size: 4.5rem; margin-bottom: 10px; }
-        .country-name { font-size: 1.6rem; font-weight: 800; margin-bottom: 15px; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .info-item { background: white; padding: 10px; border-radius: 15px; border: 1px solid #e1f0ff; }
-        .info-label { font-weight: 800; color: #74b9ff; font-size: 0.75rem; display: block; }
-        .info-value { font-weight: 800; font-size: 0.9rem; }
-        #description { color: #636e72; font-size: 0.95rem; line-height: 1.6; text-align: left; background: white; padding: 15px; border-radius: 20px; }
+        .screen { display: none; }
+        .active { display: block; animation: slideIn 0.5s ease-out; }
 
-        .footer { margin-top: 40px; text-align: center; }
-        .maker-name { 
-            display: inline-block;
-            background: #fab1a0;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { color: var(--primary-color); font-size: 1.8rem; margin-bottom: 15px; }
+        p { color: #636e72; line-height: 1.6; font-size: 1rem; }
+
+        /* 버튼 디자인 */
+        .btn {
+            background: var(--primary-color);
             color: white;
-            padding: 8px 25px;
-            border-radius: 40px 0 40px 0;
-            font-weight: 800;
-            box-shadow: 4px 4px 0 #e17055;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn:hover { background: var(--secondary-color); transform: translateY(-3px); }
+
+        /* 진행도 바 */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 20px;
+            margin: 25px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            width: 0%;
+            border-radius: 20px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .question-emoji { font-size: 70px; margin-bottom: 20px; }
+        .question-text { font-size: 1.3rem; font-weight: 700; margin-bottom: 30px; min-height: 70px; word-break: keep-all; }
+
+        .option-btn {
+            background: #f8f9fa;
+            border: 2px solid #eee;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background: #f0edff;
+            transform: scale(1.01);
+        }
+
+        /* 결과 디자인 */
+        .result-char { font-size: 90px; margin-bottom: 15px; }
+        .result-name { font-size: 2.3rem; font-weight: 800; color: var(--primary-color); margin-bottom: 5px; }
+        .result-title { font-size: 1.1rem; color: #a29bfe; font-weight: 600; margin-bottom: 20px; }
+        .result-desc {
+            background: #f1f2f6;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: left;
+            font-size: 1rem;
+            margin: 20px 0;
+            line-height: 1.8;
+            word-break: keep-all;
+        }
+
+        /* // [중요] 제작자 정보 스타일 */
+        .creator-tag {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #b2bec3;
+            font-weight: 500;
+            border-top: 1px dashed #dfe6e9;
+            padding-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>✨ 선교지를 찾아라! ✨</h1>
-        <p class="subtitle">어떤 나라를 위해 기도할까요? 🔍</p>
-        
-        <button class="btn-mission" onclick="findMission()">
-            <i class="fas fa-search"></i> 선교지 찾기!
-        </button>
+    <div class="game-container">
+        <!-- 1. 시작 화면 -->
+        <div id="start-screen" class="screen active">
+            <div class="question-emoji">🕊️</div>
+            <h1>나와 닮은 성경 인물 찾기</h1>
+            <p>나와 가장 닮은 성경 인물은 누구일까요?<br>몇 가지 질문으로 함께 찾아보아요!</p>
+            <button class="btn" onclick="startQuiz()">시작하기</button>
+            <div class="creator-tag">제작자: ACSU 1반</div>
+        </div>
 
-        <div id="result-card">
-            <div id="flag-icon" class="flag-box">📍</div>
-            <div id="country" class="country-name">국가 정보</div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">🕍 주요 종교</span>
-                    <span id="religion" class="info-value">-</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">⛪ 기독교 비율</span>
-                    <span id="percent" class="info-value">-</span>
-                </div>
+        <!-- 2. 퀴즈 화면 -->
+        <div id="quiz-screen" class="screen">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
             </div>
-            <div id="description"></div>
+            <div id="q-number" style="font-weight: bold; color: var(--primary-color);">1 / 20</div>
+            <div id="q-emoji" class="question-emoji">💡</div>
+            <div id="q-text" class="question-text">질문이 나옵니다.</div>
+            <div id="options-box"></div>
+        </div>
+
+        <!-- 3. 결과 화면 -->
+        <div id="result-screen" class="screen">
+            <p>당신의 성경 단짝은...</p>
+            <div id="res-emoji" class="result-char">🤴</div>
+            <div id="res-name" class="result-name">인물 이름</div>
+            <div id="res-title" class="result-title">부제목</div>
+            <div id="res-desc" class="result-desc">성경적 설명</div>
+            <button class="btn" onclick="location.reload()">다시 테스트하기</button>
+            <!-- // 결과 화면에도 제작자 정보를 넣었어요! -->
+            <div class="creator-tag">제작자: ACSU 1반</div>
         </div>
     </div>
 
-    <div class="footer">
-        <div class="maker-name">✨ Project by 지민 ✨</div>
-    </div>
-
     <script>
-        // 30개국 데이터 (오타 없이 정렬 완료!)
-        const missionFields = [
-            { name: "인도", flag: "🇮🇳", religion: "힌두교", percent: "2.1%", desc: "미전도 종족이 가장 많은 나라입니다. 복음을 기다리는 이들을 위해 기도해주세요." },
-            { name: "파키스탄", flag: "🇵🇰", religion: "이슬람교", percent: "0.6%", desc: "현지 성도들이 안전하게 예배드릴 수 있도록 기도가 필요합니다." },
-            { name: "이란", flag: "🇮🇷", religion: "이슬람교", percent: "0.4%", desc: "지하 교회를 통해 복음의 불길이 뜨겁게 타오르는 땅입니다." },
-            { name: "네팔", flag: "🇳🇵", religion: "힌두교", percent: "2.9%", desc: "히말라야 산맥을 따라 하나님의 영광이 선포되길 소망합니다." },
-            { name: "알제리", flag: "🇩🇿", religion: "이슬람교", percent: "0.3%", desc: "북아프리카의 영적 회복과 무슬림들의 회심을 위해 기도해주세요." },
-            { name: "모로코", flag: "🇲🇦", religion: "이슬람교", percent: "0.1%", desc: "복음의 문이 열려 자유롭게 예수님을 전할 날을 기대합니다." },
-            { name: "태국", flag: "🇹🇭", religion: "불교", percent: "1.2%", desc: "불교 전통이 강한 이곳에 성령의 강력한 바람이 불길 소망합니다." },
-            { name: "소말리아", flag: "🇸🇴", religion: "이슬람교", percent: "0.01%", desc: "극심한 고난 속에 있는 소말리아에 평화의 왕이 임하시길 기도합니다." },
-            { name: "부탄", flag: "🇧🇹", religion: "불교", percent: "2.1%", desc: "은둔의 왕국 부탄에도 십자가의 사랑이 전해지길 바랍니다." },
-            { name: "터키", flag: "🇹🇷", religion: "이슬람교", percent: "0.2%", desc: "성경의 땅 터키가 다시 한번 주님의 품으로 돌아오길 기도합니다." },
-            { name: "아프가니스탄", flag: "🇦🇫", religion: "이슬람교", percent: "0.1%", desc: "고통받는 아프간 사람들에게 하늘의 위로가 전해지길 기도합니다." },
-            { name: "예멘", flag: "🇾🇪", religion: "이슬람교", percent: "0.1%", desc: "전쟁이 멈추고 복음으로 인한 참된 평화가 깃들길 소망합니다." },
-            { name: "미얀마", flag: "🇲🇲", religion: "불교", percent: "7.9%", desc: "나라의 안정과 함께 미얀마 모든 종족이 주를 찬양하길 기도합니다." },
-            { name: "일본", flag: "🇯🇵", religion: "신토/불교", percent: "0.8%", desc: "공허한 마음으로 살아가는 일본 사람들에게 진정한 소망이 필요합니다." },
-            { name: "북한", flag: "🇰🇵", religion: "무교", percent: "1.5%", desc: "억눌린 동포들에게 자유의 복음이 속히 전해지길 간절히 소망합니다." },
-            { name: "방글라데시", flag: "🇧🇩", religion: "이슬람교", percent: "0.4%", desc: "인구 밀도가 높은 이 땅에 복음의 씨앗이 널리 뿌려지길 원합니다." },
-            { name: "라오스", flag: "🇱🇦", religion: "불교", percent: "2.6%", desc: "제약 속에서도 믿음을 키워가는 성도들에게 새 힘을 주소서." },
-            { name: "캄보디아", flag: "🇰🇭", religion: "불교", percent: "1.6%", desc: "과거의 아픔을 딛고 예수님의 사랑으로 치유되길 기도합니다." },
-            { name: "사우디아라비아", flag: "🇸🇦", religion: "이슬람교", percent: "1.2%", desc: "이슬람의 중심지에 십자가의 깃발이 꽂히길 기도합니다." },
-            { name: "리비아", flag: "🇱🇾", religion: "이슬람교", percent: "0.5%", desc: "정치적 혼란 속에 있는 리비아에 주님의 통치가 임하길 소망합니다." },
-            { name: "말리", flag: "🇲🇱", religion: "이슬람교", percent: "2.3%", desc: "서아프리카의 미전도 종족들이 주님께 돌아오는 역사를 기대합니다." },
-            { name: "모리타니", flag: "🇲🇷", religion: "이슬람교", percent: "0.1%", desc: "복음화율이 가장 낮은 이곳에 주님의 빛이 비춰지길 기도합니다." },
-            { name: "니제르", flag: "🇳🇪", religion: "이슬람교", percent: "0.5%", desc: "척박한 사막 땅에 생명의 말씀이 강물처럼 흐르길 소망합니다." },
-            { name: "오만", flag: "🇴🇲", religion: "이슬람교", percent: "1.0%", desc: "닫혀 있는 현지인들의 마음 문이 성령으로 열리길 기도합니다." },
-            { name: "이라크", flag: "🇮🇶", religion: "이슬람교", percent: "0.5%", desc: "전쟁의 폐허 위에 하나님의 성전이 다시 세워지길 기도합니다." },
-            { name: "수단", flag: "🇸🇩", religion: "이슬람교", percent: "3.0%", desc: "박해 속에서도 인내하는 그리스도인들을 주께서 지켜주소서." },
-            { name: "몽골", flag: "🇲🇳", religion: "불교", percent: "2.1%", desc: "광활한 초원의 몽골 교회들이 아시아를 살리는 통로가 되길 원합니다." },
-            { name: "우즈베키스탄", flag: "🇺🇿", religion: "이슬람교", percent: "1.0%", desc: "중앙아시아의 영혼들이 복음 안에서 참 자유를 얻길 소망합니다." },
-            { name: "투르크메니스탄", flag: "🇹🇲", religion: "이슬람교", percent: "0.1%", desc: "철저히 닫힌 이 땅의 문을 주께서 열어주시길 기도합니다." },
-            { name: "베트남", flag: "🇻🇳", religion: "무교/불교", percent: "9.5%", desc: "베트남 교회가 선교하는 교회로 든든히 서가길 기도합니다." }
+        // --- [질문 데이터 20개] ---
+        const questions = [
+            { q: "새로운 친구들을 만날 때 나의 모습은 어떠한가요?", a: "먼저 다가가 웃으며 인사해요", b: "조용히 지켜보다가 조금씩 친해져요", emoji: "👋", type: "E" },
+            { q: "나는 할 일을 미리 하는 편인가요, 미루는 편인가요?", a: "할 일은 미리 끝내야 마음이 편해요", b: "나중에 집중해서 한꺼번에 하는 게 좋아요", emoji: "🏃", type: "J" },
+            { q: "친구가 슬픈 이야기를 하면 나의 반응은?", a: "도움이 될 만한 방법을 같이 고민해요", b: "친구의 마음을 느끼며 같이 슬퍼해줘요", emoji: "🤝", type: "F" },
+            { q: "어려운 문제를 만났을 때 나는?", a: "혼자 조용히 생각하며 답을 찾아봐요", b: "친구들이나 선생님께 물어보며 함께 풀어요", emoji: "📝", type: "I" },
+            { q: "일기를 쓸 때 나의 기록 방식은?", a: "오늘 있었던 일들을 차례대로 적어요", b: "그때그때 느꼈던 감정이나 상상을 적어요", emoji: "📒", type: "S" },
+            { q: "내 방은 보통 어떤 모습인가요?", a: "항상 제 자리에 깔끔하게 정리되어 있어요", b: "조금 어질러져 있어도 제가 편하면 돼요", emoji: "🧹", type: "J" },
+            { q: "많은 사람 앞에서 발표하는 것이 즐거운가요?", a: "떨리긴 해도 주목받는 게 재미있어요", b: "너무 긴장돼서 빨리 끝내고 싶어요", emoji: "🎤", type: "E" },
+            { q: "약속 시간이 정해지면 나는?", a: "미리 가서 기다리는 게 마음 편해요", b: "시간에 딱 맞추거나 가끔 늦기도 해요", emoji: "⏰", type: "J" },
+            { q: "모르는 길을 찾아갈 때 나의 방법은?", a: "지도를 아주 꼼꼼히 확인하고 움직여요", b: "방향만 잡고 느낌대로 가보는 편이에요", emoji: "🗺️", type: "S" },
+            { q: "나의 상상력은 풍부한 편인가요?", a: "현실에서 가능한 일들을 주로 생각해요", b: "머릿속으로 아주 신비한 세상을 그려봐요", emoji: "🌈", type: "N" },
+            { q: "잘못한 친구를 보았을 때 나는?", a: "그게 왜 잘못인지 정확하게 말해줘요", b: "상처받지 않게 부드럽게 위로하며 말해요", emoji: "⚖️", type: "T" },
+            { q: "여행을 가기 전 나의 모습은?", a: "무엇을 할지 시간표를 미리 짜둬요", b: "가서 하고 싶은 대로 자유롭게 즐겨요", emoji: "🚗", type: "J" },
+            { q: "학교 규칙을 지키는 것에 대한 생각은?", a: "규칙은 모두를 위해 꼭 지켜야 해요", b: "상황에 따라서 조금 다를 수도 있어요", emoji: "🚦", type: "T" },
+            { q: "친구에게 줄 선물을 고를 때 나의 기준은?", a: "친구가 지금 꼭 필요할 것 같은 물건", b: "내 마음이 듬뿍 담긴 예쁘고 감동적인 선물", emoji: "🎁", type: "F" },
+            { q: "고민이 생겼을 때 나는 보통?", a: "이성적으로 원인을 분석하고 해결해요", b: "누군가 내 마음을 알아주길 바라며 기도해요", emoji: "❤️", type: "F" },
+            { q: "오늘 할 일을 다 못했다면 마음이 어떨까요?", a: "찜찜해서 끝낼 때까지 잠이 안 올 것 같아요", b: "내일 하면 되지! 하고 푹 자고 일어날래요", emoji: "💤", type: "J" },
+            { q: "나의 기도는 주로 어떤가요?", a: "생각을 차분히 정리하며 대화하듯 해요", b: "뜨거운 열정으로 간절하게 소리 내어 기도해요", emoji: "🙏", type: "I" },
+            { q: "어려운 상황에서 내가 선택하는 길은?", a: "과거의 경험을 바탕으로 안전한 길을 가요", b: "새롭고 창의적인 방법으로 도전해봐요", emoji: "💡", type: "N" },
+            { q: "나는 계획대로 사는 것이 좋은가요?", a: "네, 계획이 있어야 안심이 돼요", b: "아니요, 즉흥적인 것이 더 즐거워요", emoji: "📅", type: "J" },
+            { q: "남을 돕는 일을 할 때 나의 느낌은?", a: "도와줄 수 있는 구체적인 행동을 찾아요", b: "도움을 줄 수 있다는 사실 자체가 감동적이에요", emoji: "✨", type: "F" }
         ];
 
-        function findMission() {
-            // 랜덤으로 하나 선택
-            const field = missionFields[Math.floor(Math.random() * missionFields.length)];
-            
-            // 화면에 보여주기
-            const card = document.getElementById('result-card');
-            card.style.display = 'block';
-            
-            document.getElementById('flag-icon').innerText = field.flag;
-            document.getElementById('country').innerText = field.name;
-            document.getElementById('religion').innerText = field.religion;
-            document.getElementById('percent').innerText = field.percent;
-            document.getElementById('description').innerText = "💌 " + field.desc;
+        // --- [결과 데이터 16명 - 개역한글 명칭 및 성경적 설명] ---
+        const characters = [
+            { name: "다윗", title: "여호와의 마음에 합한 자", emoji: "🎻", type: "ENFP", desc: "당신은 어린 목자 시절 골리앗을 물리친 다윗을 닮았어요! 성경은 그를 '하나님의 마음에 합한 자'라고 불러요. 다윗처럼 찬양하기를 즐거워하고, 죄를 지었을 때도 눈물로 회개할 줄 아는 뜨거운 영성을 가졌군요." },
+            { name: "모세", title: "모든 사람보다 온유함이 승한 지도자", emoji: "🌊", type: "INFJ", desc: "당신은 홍해를 가른 모세를 닮았어요! 하나님은 모세를 가리켜 '그 온유함이 지면의 모든 사람보다 승하다'고 하셨죠. 겸손히 하나님의 음성에 귀 기울이며 공동체를 약속의 땅으로 이끄는 신실한 리더입니다." },
+            { name: "에스더", title: "민족을 위해 죽으면 죽으리이다 고백한 왕비", emoji: "👑", type: "ISFJ", desc: "당신은 민족을 구원한 에스더 왕비를 닮았어요! '죽으면 죽으리이다'라는 결단으로 왕 앞에 나아가는 용기와, 민족을 위해 간절히 기도했던 정결하고 책임감 강한 마음을 가졌군요." },
+            { name: "베드로", title: "반석이라 일컬음 받은 열정의 수제자", emoji: "🛶", type: "ESFP", desc: "당신은 즉시 배를 버려두고 주를 따른 베드로를 닮았어요! 주는 그리스도시요 살아계신 하나님의 아들이라 고백했던 반석 같은 믿음과, 성령 충만하여 복음을 전하는 뜨거운 열정이 넘칩니다." },
+            { name: "다니엘", title: "뜻을 정하여 기도하기를 쉼 없는 자", emoji: "🦁", type: "INTJ", desc: "당신은 바벨론 포로 중에도 '뜻을 정하여' 자신을 더럽히지 않은 다니엘을 닮았어요! 사자굴 앞에서도 하루 세 번 무릎을 꿇고 기도했던 그처럼, 어떤 상황에서도 지혜와 영성을 잃지 않는 분이군요." },
+            { name: "바울", title: "이방인의 사도로 부름받은 복음의 전도자", emoji: "📜", type: "ENTP", desc: "당신은 일생을 바쳐 복음을 전한 바울을 닮았어요! 지식과 논리가 풍부하며, '주 예수께 받은 사명'을 위해 생명을 아끼지 않았던 푯대를 향해 달려가는 열정가입니다." },
+            { name: "루디아", title: "주께서 마음을 열어 사도를 도운 자", emoji: "💜", type: "ESTP", desc: "당신은 빌립보의 자주 장사 루디아를 닮았어요! 주께서 당신의 마음을 열어 복음을 듣게 하셨고, 온 집이 세례를 받은 후 사도들을 극진히 섬겼던 실질적인 능력과 믿음을 조화시킨 분이죠." },
+            { name: "스데반", title: "성령과 지혜가 충만하여 순교한 자", emoji: "💎", type: "ENFJ", desc: "당신은 얼굴이 천사와 같았던 스데반 집사님을 닮았어요! 지혜가 충만하여 복음을 전했고, 순교하는 순간에도 '주여 이 죄를 저들에게 돌리지 마옵소서'라고 기도했던 사랑이 가득한 분입니다." },
+            { name: "룻", title: "어머니의 하나님이 나의 하나님이 되시리니", emoji: "🌾", type: "ISFP", desc: "당신은 나오미를 끝까지 따랐던 룻을 닮았어요! '어머니 가시는 곳에 나도 가고'라며 보여준 일편단심의 사랑과 겸손함이 돋보여요. 묵묵히 자기 자리를 지키며 주님의 축복을 예비하는 분이군요." },
+            { name: "요셉", title: "하나님이 함께하시므로 형통한 자", emoji: "🌈", type: "ENFJ", desc: "당신은 꿈을 성취한 요셉을 닮았어요! 시련 속에서도 '여호와께서 요셉과 함께하시므로 형통한 자가 된' 것처럼, 모든 고난을 하나님의 섭리로 해석하고 용서할 줄 아는 큰 그릇을 가진 분입니다." },
+            { name: "노아", title: "방주를 예비하여 온 가족을 구원한 의인", emoji: "⛵", type: "ISTJ", desc: "당신은 묵묵히 방주를 만든 노아를 닮았어요! 보지 못하는 일에 경고하심을 받아 경외함으로 순종했던 그처럼, 남들이 뭐라 해도 하나님의 약속을 믿고 성실하게 자리를 지키는 믿음직한 분이에요." },
+            { name: "사무엘", title: "말씀하옵소서 주의 종이 듣겠나이다", emoji: "👂", type: "ISFJ", desc: "당신은 성소에서 여호와의 음성을 들은 사무엘을 닮았어요! '말씀하옵소서 주의 종이 듣겠나이다'라는 태도로 평생 기도하기를 쉬지 않았던 정직하고 성실한 하나님의 사람입니다." },
+            { name: "기드온", title: "여호와 살롬을 고백한 큰 용사", emoji: "🏺", type: "INTP", desc: "당신은 하나님에 의해 '큰 용사'로 불린 기드온을 닮았어요! 신중한 성격이지만, 확신이 생기면 항아리와 횃불로 대군을 물리치는 지혜와 전략을 겸비한 반전 매력의 소유자입니다." },
+            { name: "한나", title: "심정을 통하며 눈물로 기도한 여인", emoji: "🕯️", type: "INFJ", desc: "당신은 여호와 앞에 심정을 통하며 간절히 기도했던 한나를 닮았어요! 고통을 기도로 승화시켰으며, 응답받은 후 약속을 지켰던 신실한 분이에요. 내면의 깊은 힘을 아는 기도의 사람입니다." },
+            { name: "사라", title: "하나님의 기쁨을 경험하여 웃게 된 자", emoji: "😄", type: "ESFP", desc: "당신은 믿음의 어머니 사라를 닮았어요! 결국 '하나님이 나로 웃게 하시니'라고 고백하며 기적을 경험했죠. 주변 사람들에게 밝은 에너지를 전하며 하나님의 은혜를 웃음으로 증거하는 분이에요." },
+            { name: "세례 요한", title: "광야에서 외치는 자의 소리", emoji: "🍯", type: "ISTP", desc: "당신은 주의 길을 예비한 세례 요한을 닮았어요! '그는 흥하여야 하겠고 나는 쇠하여야 하리라'는 고백처럼 오직 주님만 높이는 강직한 성품을 가졌군요. 진리를 외치는 소리 같은 분입니다." }
+        ];
 
-            // 폭죽 터뜨리기
+        let currentIdx = 0;
+        let score = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('q-number').innerText = `${currentIdx + 1} / 20`;
+            document.getElementById('q-emoji').innerText = q.emoji;
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('progress-bar').style.width = `${(currentIdx / 20) * 100}%`;
+
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+
+            const btnA = document.createElement('div');
+            btnA.className = 'option-btn';
+            btnA.innerText = q.a;
+            btnA.onclick = () => handleNext(q.type, true);
+
+            const btnB = document.createElement('div');
+            btnB.className = 'option-btn';
+            btnB.innerText = q.b;
+            btnB.onclick = () => handleNext(q.type, false);
+
+            box.appendChild(btnA);
+            box.appendChild(btnB);
+        }
+
+        function handleNext(type, isA) {
+            if (isA) {
+                score[type]++;
+            } else {
+                const opposite = { E:'I', I:'E', S:'N', N:'S', T:'F', F:'T', J:'P', P:'J' };
+                score[opposite[type]]++;
+            }
+
+            currentIdx++;
+            if (currentIdx < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+
+            let mbti = "";
+            mbti += (score.E >= score.I) ? "E" : "I";
+            mbti += (score.S >= score.N) ? "S" : "N";
+            mbti += (score.T >= score.F) ? "T" : "F";
+            mbti += (score.J >= score.P) ? "J" : "P";
+
+            let res = characters.find(c => c.type === mbti);
+            if (!res) res = characters[Math.floor(Math.random() * characters.length)];
+
+            document.getElementById('res-emoji').innerText = res.emoji;
+            document.getElementById('res-name').innerText = res.name;
+            document.getElementById('res-title').innerText = res.title;
+            document.getElementById('res-desc').innerText = res.desc;
+
             confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
+                particleCount: 180,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#6c5ce7', '#a29bfe', '#ff7675', '#fdcb6e']
             });
         }
     </script>
